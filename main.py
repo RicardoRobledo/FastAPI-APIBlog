@@ -21,6 +21,11 @@ app = FastAPI(
 connection = Singleton.get_connection()
 
 
+def make_migrations():
+
+    connection.create_tables([User, Publication, Comments])
+
+
 @app.on_event('startup')
 def startup():
     
@@ -31,11 +36,13 @@ def startup():
         
         print('Connecting...')
     
-    #connection.create_tables([User, Publication, Comments])
+    make_migrations()
 
 
 @app.on_event('shutdown')
 def shutdown():
+    
+    print('Closing server')
     
     if not connection.is_closed():
         connection.close()
