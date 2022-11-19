@@ -10,9 +10,14 @@ from peewee import(
     Model
 )
 
+from ..singleton import Singleton
+
 
 __author__ = 'Ricardo'
 __version__ = '0.1'
+
+
+database = Singleton.get_connection()
 
 
 # -----------------------------------------------
@@ -27,6 +32,10 @@ class Publication(Model):
     creation_date = DateTimeField(default=datetime.now)
     is_active = BooleanField(default=True)
     user_id = ForeignKeyField(model=User, backref='user')
+    
+    class Meta:
+        database = database
+        table_name = 'publications'
 
 
 # -----------------------------------------------
@@ -41,3 +50,7 @@ class Comments(Model):
     is_active = BooleanField(default=True)
     user_id = ForeignKeyField(model=User, backref='user')
     publication_id = ForeignKeyField(model=Publication, backref='publication')
+    
+    class Meta:
+        database = database
+        table_name = 'comments'

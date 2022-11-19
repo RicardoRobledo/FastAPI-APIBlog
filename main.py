@@ -1,5 +1,11 @@
 from fastapi import FastAPI
 
+from api.singleton import Singleton
+
+from api.users.models import User
+
+from api.publications.models import Publication, Comments
+
 
 __author__ = 'Ricardo'
 __version__ = 0.1
@@ -12,11 +18,24 @@ app = FastAPI(
 )
 
 
+connection = Singleton.get_connection()
+
+
 @app.on_event('startup')
 def startup():
-    print('ENCENDIDO')
+    
+    print('Server is beggining')
+    
+    if connection.is_closed():
+        connection.connect()
+        
+        print('Connecting...')
+    
+    #connection.create_tables([User, Publication, Comments])
 
 
 @app.on_event('shutdown')
 def shutdown():
-    print('APAGADO')
+    
+    if not connection.is_closed():
+        connection.close()

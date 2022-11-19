@@ -7,6 +7,8 @@ from peewee import(
     BooleanField
 )
 
+from ..singleton import Singleton
+
 
 __author__ = 'Ricardo'
 __version__ = '0.1'
@@ -25,3 +27,10 @@ class User(Model):
     email = CharField(max_length=20)
     creation_date = DateTimeField(default=datetime.now)
     is_active = BooleanField(default=True)
+    
+    def __str__(self):
+        return self.username
+    
+    class Meta:
+        database = Singleton.get_connection()
+        table_name = 'users'
