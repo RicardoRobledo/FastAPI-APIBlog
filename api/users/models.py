@@ -12,6 +12,11 @@ __author__ = 'Ricardo'
 __version__ = '0.1'
 
 
+# -----------------------------------------------
+#                       User
+# -----------------------------------------------
+
+
 class User(Model):
     
     username = CharField(max_length=20)
