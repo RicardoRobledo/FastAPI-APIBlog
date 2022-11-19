@@ -51,7 +51,7 @@ def startup():
         
         print('Connecting...')
 
-    connection.create_tables([User, Publication, Comments])
+    make_migrations()
 
 
 @app.on_event('shutdown')

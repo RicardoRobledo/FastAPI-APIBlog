@@ -7,7 +7,11 @@ from peewee import(
     BooleanField
 )
 
+import hashlib
+
 from ..singleton import Singleton
+
+from .config import ENCRIPTED_FIELDS
 
 
 __author__ = 'Ricardo'
@@ -27,10 +31,29 @@ class User(Model):
     email = CharField(max_length=70)
     creation_date = DateTimeField(default=datetime.now)
     is_active = BooleanField(default=True)
+
     
     def __str__(self):
         return self.username
+
     
     class Meta:
         database = Singleton.get_connection()
         table_name = 'users'
+
+    
+    @classmethod
+    def encrypt_value(cls, value):
+       
+        return hashlib.sha1(value.encode('utf-8')).hexdigest()
+    
+
+    @classmethod
+    def create(cls, **query):
+
+        for key, value in query.items():
+            
+            if key in ENCRIPTED_FIELDS:
+                query[key] = cls.encrypt_value(value)
+       
+        return super().create(**query)
