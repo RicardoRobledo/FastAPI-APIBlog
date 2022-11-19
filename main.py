@@ -1,10 +1,12 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 
 from api.singleton import Singleton
 
 from api.users.models import User
 
 from api.publications.models import Publication, Comments
+
+from api import router as api_v1
 
 
 __author__ = 'Ricardo'
@@ -21,6 +23,19 @@ app = FastAPI(
 connection = Singleton.get_connection()
 
 
+# -----------------------------------------------
+#                    Routers
+# -----------------------------------------------
+
+
+app.include_router(api_v1)
+
+
+# -----------------------------------------------
+#                    Events
+# -----------------------------------------------
+
+
 def make_migrations():
 
     connection.create_tables([User, Publication, Comments])
@@ -35,8 +50,8 @@ def startup():
         connection.connect()
         
         print('Connecting...')
-    
-    make_migrations()
+
+    connection.create_tables([User, Publication, Comments])
 
 
 @app.on_event('shutdown')
@@ -46,3 +61,5 @@ def shutdown():
     
     if not connection.is_closed():
         connection.close()
+    
+    print('Server shut down')
