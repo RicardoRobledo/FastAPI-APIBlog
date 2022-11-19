@@ -21,10 +21,10 @@ __version__ = '0.1'
 
 class User(Model):
     
-    username = CharField(max_length=20)
-    name = CharField(max_length=20)
+    username = CharField(max_length=70)
+    name = CharField(max_length=70)
     password = CharField(max_length=70)
-    email = CharField(max_length=20)
+    email = CharField(max_length=70)
     creation_date = DateTimeField(default=datetime.now)
     is_active = BooleanField(default=True)
     
