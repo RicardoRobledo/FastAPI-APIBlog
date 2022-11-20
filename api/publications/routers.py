@@ -8,7 +8,8 @@ from .schemas import (
     PublicationPostRequest,
     PublicationSpecificGetResponse,
     CommentGetResponse,
-    CommentPostRequest
+    CommentPostRequest,
+    CommentPutRequest
 )
 
 from typing import List
@@ -218,3 +219,28 @@ async def create_comment(comment:CommentPostRequest):
     )
     
     return comment
+
+
+@comments_router.put('/{comment_id}', response_model=CommentGetResponse)
+async def update_comment(comment_id:int, new_comment:CommentPutRequest):
+    """
+    This method update a comment given
+
+    :param content: body of our comment
+    
+    :raise httpexception: 401, It is thrown if comment_id or user_id do not exist
+    
+    :returns: comment updated
+    """
+
+    comment = Comment.select().where((Comment.id==comment_id)&(Comment.is_active))
+    
+    if not comment.exists():
+        raise HTTPException(detail='Comment not found', status_code=401)
+
+    comment = comment.first()
+    comment.content = new_comment.content 
+    comment.save()
+
+    return comment
+

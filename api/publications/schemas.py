@@ -55,3 +55,8 @@ class CommentPostRequest(BaseModel):
     content: str
     publication_id: int
     user_id: int
+
+
+class CommentPutRequest(BaseModel):
+
+    content: str
