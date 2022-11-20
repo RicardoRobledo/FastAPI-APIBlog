@@ -1,5 +1,5 @@
 from .users.routers import router as users_router
-from .publications.routers import comments_router, publications_router
+from .publications.routers import publications_router, comments_router
 
 from fastapi import APIRouter
 

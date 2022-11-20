@@ -66,21 +66,13 @@ async def get_user(user_id:int):
 
 
 @router.get('', response_model=List[UserResponseGetModel])
-async def get_user(limit:int=10, page:int=1):
+async def get_users(limit:int=10, page:int=1):
     """
     This method give us users
     
     :param limit: limit of users to return
     
     :param page: number of page
-
-    :param name: name of user
-
-    :param username: nickname
-
-    :param password: password of user
-
-    :param email: email of user
 
     :returns: users matched
     """
