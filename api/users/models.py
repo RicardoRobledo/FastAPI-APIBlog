@@ -47,6 +47,18 @@ class User(Model):
        
         return hashlib.sha1(value.encode('utf-8')).hexdigest()
     
+    
+    @classmethod
+    def authenticate(cls, username, password):
+
+        user = User.select().where(
+            (User.username==cls.encrypt_value(username)) &
+            (User.password==cls.encrypt_value(password)) &
+            (User.is_active)
+        ).first()
+       
+        return user
+    
 
     @classmethod
     def create(cls, **query):
