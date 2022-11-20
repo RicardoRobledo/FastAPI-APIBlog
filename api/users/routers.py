@@ -6,14 +6,12 @@ from .models import User
 
 from typing import List
 
-from .config import ENCRIPTED_FIELDS
-
 
 __author__ = 'Ricardo'
 __version__ = '0.1'
 
 
-router = APIRouter(prefix='/users/user', tags=['User'])
+router = APIRouter(prefix='/users/user', tags=['Users'])
 
 
 @router.post('', response_model=UserResponsePostModel)

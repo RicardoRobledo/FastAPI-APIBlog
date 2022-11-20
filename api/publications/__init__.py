@@ -1,1 +1,1 @@
-#from .routers import router
+from .routers import publications_router, comments_router
