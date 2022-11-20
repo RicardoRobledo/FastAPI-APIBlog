@@ -4,7 +4,7 @@ from api.singleton import Singleton
 
 from api.users.models import User
 
-from api.publications.models import Publication, Comments
+from api.publications.models import Publication, Comment
 
 from api import router as api_v1
 
@@ -38,7 +38,7 @@ app.include_router(api_v1)
 
 def make_migrations():
 
-    connection.create_tables([User, Publication, Comments])
+    connection.create_tables([User, Publication, Comment])
 
 
 @app.on_event('startup')

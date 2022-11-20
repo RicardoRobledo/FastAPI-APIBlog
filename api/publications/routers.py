@@ -1,9 +1,15 @@
 from fastapi import APIRouter, HTTPException
 
-from .models import Publication, Comments
+from .models import Publication, Comment
 from ..users.models import User
 
-from .schemas import PublicationGetResponse, PublicationPostRequest, PublicationSpecificGetResponse
+from .schemas import (
+    PublicationGetResponse,
+    PublicationPostRequest,
+    PublicationSpecificGetResponse,
+    CommentGetResponse,
+    CommentPostRequest
+)
 
 from typing import List
 
@@ -145,3 +151,49 @@ async def delete_publication(publication_id:int):
 # ---------------------------------------------------
 #                      Comments
 # ---------------------------------------------------
+
+
+@comments_router.get('', response_model=List[CommentGetResponse])
+async def get_comments(page:int=1, limit:int=10):
+    """
+    This method give us all comments
+    
+    :param page: page number
+    
+    :param limit: comments quantity to show
+    
+    :return: comments gotten
+    """
+
+    return [ comment for comment in Comment.select().paginate(page, limit) ]
+
+
+@comments_router.post('', response_model=CommentGetResponse)
+async def create_comment(comment:CommentPostRequest):
+    """
+    This method make an user up
+
+    :param content: body of our comment
+    
+    :param publication_id: Publication's identifier
+    
+    :param user_id: User's identifier
+    
+    :param httpexception: 401, It is thrown if publication_id or user_id do not exist
+    
+    :returns: comment created
+    """
+    
+    if not Publication.select().where((Publication.id==comment.publication_id)&(Publication.is_active)).exists():
+        raise HTTPException(detail='Publication not found', status_code=404)
+
+    if not User.select().where((User.id==comment.user_id)&(User.is_active)).exists():
+        raise HTTPException(detail='User not found', status_code=404)    
+    
+    comment = Comment.create(
+        content=comment.content,
+        publication_id=comment.publication_id,
+        user_id=comment.user_id
+    )
+    
+    return comment

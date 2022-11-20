@@ -9,6 +9,11 @@ __author__ = 'Ricardo'
 __version__ = '0.1'
 
 
+# ---------------------------------------------------
+#                   Publications
+# ---------------------------------------------------
+
+
 class PublicationGetResponse(ResponseModel):
     
     title: str
@@ -28,4 +33,25 @@ class PublicationPostRequest(BaseModel):
     
     title: str
     content: str
+    user_id: int
+
+
+# ---------------------------------------------------
+#                      Comments
+# ---------------------------------------------------
+
+
+class CommentGetResponse(ResponseModel):
+    
+    id: int
+    content: str
+    is_active: bool
+    publication_id: PublicationGetResponse
+    user_id: UserResponseGetModel
+
+
+class CommentPostRequest(BaseModel):
+
+    content: str
+    publication_id: int
     user_id: int

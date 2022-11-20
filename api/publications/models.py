@@ -43,7 +43,7 @@ class Publication(Model):
 # -----------------------------------------------
 
 
-class Comments(Model):
+class Comment(Model):
     
     content = CharField(max_length=200)
     creation_date = DateTimeField(default=datetime.now)
