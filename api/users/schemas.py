@@ -1,7 +1,5 @@
 from pydantic import BaseModel
 
-from typing import Optional
-
 from ..common_schemas import ResponseModel
 
 
@@ -9,7 +7,7 @@ __author__ = 'Ricardo'
 __version__ = '0.1'
 
 
-class UserRequestPostModel(BaseModel):
+class UserRequestModel(BaseModel):
     
     name: str
     username: str
@@ -17,14 +15,12 @@ class UserRequestPostModel(BaseModel):
     email: str
 
 
-class UserRequestGetModel(BaseModel):
-    
-    name: Optional[str]
-    username: Optional[str]
-    password: Optional[str]
-    email: Optional[str]
+class UserResponsePostModel(ResponseModel):
+
+    username: str
 
 
 class UserResponseGetModel(ResponseModel):
 
     username: str
+    email: str

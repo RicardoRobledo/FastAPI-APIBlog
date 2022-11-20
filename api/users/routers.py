@@ -1,10 +1,10 @@
 from fastapi import APIRouter, HTTPException
 
-from .schemas import UserRequestModel
+from .schemas import UserRequestModel, UserResponseGetModel, UserResponsePostModel
 
 from .models import User
 
-from .schemas import UserResponseModel
+from typing import List
 
 
 __author__ = 'Ricardo'
@@ -14,7 +14,7 @@ __version__ = '0.1'
 router = APIRouter(prefix='/users/user')
 
 
-@router.post('', response_model=UserResponseModel)
+@router.post('', response_model=UserResponsePostModel)
 async def create_user(user:UserRequestModel):
     """
     This method create our user given
@@ -45,15 +45,15 @@ async def create_user(user:UserRequestModel):
     return user
 
 
-@router.get('', response_model=UserResponseModel)
-async def get_user(user:UserRequestModel, limit:int=10, page:int=1):
+@router.get('', response_model=List[UserResponseGetModel])
+async def get_user(limit:int=10, page:int=1):
     """
     This method create our user given
 
     :param name: name of user
 
     :param username: nickname
-        
+
     :param password: password of user
 
     :param email: email of user
@@ -63,14 +63,6 @@ async def get_user(user:UserRequestModel, limit:int=10, page:int=1):
     :returns: users matched
     """
     
-    if User.select():
-        raise HTTPException(status_code=401, detail='That username already exists, try again')
+    users = User.select().paginate(page, limit)
 
-    user = User.create(
-        name=user.name,
-        username=user.username,
-        password=user.password,
-        email=user.email
-    )
-    
-    return user
+    return [ user for user in users ]
