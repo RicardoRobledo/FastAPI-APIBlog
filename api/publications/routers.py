@@ -168,6 +168,27 @@ async def get_comments(page:int=1, limit:int=10):
     return [ comment for comment in Comment.select().paginate(page, limit) ]
 
 
+@comments_router.get('/{comment_id}', response_model=CommentGetResponse)
+async def get_comment(comment_id:int):
+    """
+    This method give us a comment
+    
+    :param comment_id: Comment's identifier
+    
+    :raise httpexception: 401, It is thrown if comment_id does not exists
+    
+    :return: comment gotten
+    """
+    
+    comment = Comment.select().where((Comment.id==comment_id)&(Comment.is_active))
+    
+    if not comment.exists():
+        raise HTTPException(detail='Comment not found', status_code=401)
+
+    return comment.first()
+
+
+
 @comments_router.post('', response_model=CommentGetResponse)
 async def create_comment(comment:CommentPostRequest):
     """
@@ -179,7 +200,7 @@ async def create_comment(comment:CommentPostRequest):
     
     :param user_id: User's identifier
     
-    :param httpexception: 401, It is thrown if publication_id or user_id do not exist
+    :raise httpexception: 401, It is thrown if publication_id or user_id do not exist
     
     :returns: comment created
     """
