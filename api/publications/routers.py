@@ -244,3 +244,26 @@ async def update_comment(comment_id:int, new_comment:CommentPutRequest):
 
     return comment
 
+
+@comments_router.delete('/{comment_id}')
+async def delete_comment(comment_id):
+    """
+    This method delete a comment given
+    
+    :param comment_id: Comment's identifier
+    
+    :raise httpexception: 401, It is thrown if comment_id does not exist
+    
+    :returns: comment deleted
+    """
+    
+    comment = Comment.select().where((Comment.id==comment_id)&(Comment.is_active))
+    
+    if comment.exists():
+        HTTPException(status_code=401, detail='That comment does not exist')
+    
+    comment = comment.first()
+    comment.is_active = False
+    comment.save()
+    
+    return comment
