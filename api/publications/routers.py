@@ -36,6 +36,24 @@ async def get_publications(page:int=1, limit:int=10):
     return [ publication for publication in Publication.select().paginate(page, limit) ]
 
 
+@publications_router.get('/{publication_id}', response_model=PublicationGetResponse)
+async def get_publications(publication_id:int):
+    """
+    This method returns a publication given
+
+    :param publication_id: publication's identifier
+    
+    :returns: publication found
+    """
+    
+    publication = Publication.select().where((Publication.id==publication_id) & (Publication.is_active))
+    
+    if not publication.exists():
+        raise HTTPException(status_code=401, detail='Publication not found')
+    
+    return publication.first()
+
+
 @publications_router.post('', response_model=PublicationGetResponse)
 async def create_publication(publication:PublicationPostRequest):
     """

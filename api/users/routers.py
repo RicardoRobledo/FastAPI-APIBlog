@@ -32,7 +32,7 @@ async def register(user:UserRequestModel):
     :returns: username received
     """
     
-    if User.select().where(User.username==User.encrypt_value(user.username)).first():
+    if User.select().where((User.username==User.encrypt_value(user.username)) & (User.is_active)).first():
         raise HTTPException(status_code=401, detail='That username already exists, try again')
 
     user = User.create(
@@ -57,7 +57,7 @@ async def get_user(user_id:int):
     :returns: user matched
     """
     
-    user = User.select().where(User.id==user_id).first()
+    user = User.select().where((User.id==user_id) & (User.is_active)).first()
     
     if user is None:
         raise HTTPException(status_code=401, detail='User not found')
@@ -94,12 +94,14 @@ async def delete_user(user_id:int):
     :returns: user deleted
     """
     
-    user = User.select().where(User.id==user_id).first()
+    user = User.select().where((User.id==user_id) & (User.is_active))
 
-    if user is None:
+    if not user.exists():
         raise HTTPException(status_code=404, detail='User not found')
     
-    user.delete_instance()
+    user = user.first()
+    user.is_active = False
+    user.save()
     
     return user
 

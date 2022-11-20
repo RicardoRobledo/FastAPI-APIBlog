@@ -22,5 +22,7 @@ class UserResponsePostModel(ResponseModel):
 
 class UserResponseGetModel(ResponseModel):
 
+    id: int
     username: str
     email: str
+    is_active: bool
