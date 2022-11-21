@@ -33,10 +33,6 @@ class User(Model):
     is_active = BooleanField(default=True)
 
     
-    def __str__(self):
-        return self.username
-
-    
     class Meta:
         database = Singleton.get_connection()
         table_name = 'users'
@@ -55,7 +51,7 @@ class User(Model):
             (User.username==cls.encrypt_value(username)) &
             (User.password==cls.encrypt_value(password)) &
             (User.is_active)
-        ).first()
+        )
        
         return user
     

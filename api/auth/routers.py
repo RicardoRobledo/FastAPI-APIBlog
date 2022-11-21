@@ -1,7 +1,9 @@
-from fastapi import Depends, status, APIRouter
+from fastapi import Depends, status, APIRouter, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 
 from ..users.models import User
+
+from .tokens import generate_access_token
 
 
 __author__ = 'Ricardo'
@@ -23,9 +25,19 @@ async def auth(data:OAuth2PasswordRequestForm=Depends()):
     
     :returns: access token with type
     """
-    
-    user = User.authenticate(data.username, data.password)
-    print(user)
-    
-    return {}
 
+    user = User.authenticate(data.username, data.password)
+    
+    if user.exists():
+        
+        return {
+            'token_type': 'Bearer',
+            'access_token': generate_access_token(user.first())
+        }
+        
+    else:
+        raise HTTPException(
+            status_code=401,
+            detail='User not found',
+            headers={'WWW-Authenticate':'Bearer'}
+        )

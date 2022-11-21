@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 from ..common_schemas import ResponseModel
 
@@ -13,6 +13,28 @@ class UserRequestModel(BaseModel):
     username: str
     password: str
     email: str
+
+    
+    @validator('username')
+    def username_validator(cls, username):
+        
+        length = len(username)
+        
+        if length<2 or length>70:
+            raise ValueError('Length for username ought to be more than 1 and less than 70 chars')
+        
+        return username
+
+
+    @validator('password')
+    def password_validator(cls, password):
+        
+        length = len(password)
+        
+        if length<1 or length>70:
+            raise ValueError('Length for password ought to be more than 1 and less than 70 chars')
+        
+        return password
 
 
 class UserResponsePostModel(ResponseModel):

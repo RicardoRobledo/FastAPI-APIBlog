@@ -1,4 +1,6 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+
+from ..auth.tokens import get_user
 
 from .models import Publication, Comment
 from ..users.models import User
@@ -64,7 +66,7 @@ async def get_publications(publication_id:int):
 
 
 @publications_router.post('', response_model=PublicationGetResponse)
-async def create_publication(publication:PublicationPostRequest):
+async def create_publication(publication:PublicationPostRequest, user:User=Depends(get_user)):
     """
     This method create a publication
 
@@ -126,7 +128,7 @@ async def update_publication(publication_id:int, new_publication:PublicationPost
 
 
 @publications_router.delete('/{publication_id}', response_model=PublicationGetResponse)
-async def delete_publication(publication_id:int):
+async def delete_publication(publication_id:int, user:User=Depends(get_user)):
     """
     This method delete a publication given
 
@@ -143,6 +145,13 @@ async def delete_publication(publication_id:int):
         raise HTTPException(status_code=401, detail='Publication not found')
     
     publication = publication.first()
+    
+    print(type(publication.user_id.id))
+    print(type(user.id))
+
+    if publication.user_id.id!=user.id:
+        raise HTTPException(status_code=300, detail='You are not the owner')
+
     publication.is_active = False
     publication.save()
     

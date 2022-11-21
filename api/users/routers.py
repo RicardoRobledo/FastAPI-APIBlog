@@ -31,8 +31,8 @@ async def register(user:UserRequestModel):
 
     :returns: username received
     """
-    
-    if User.select().where((User.username==User.encrypt_value(user.username)) & (User.is_active)).first():
+
+    if User.select().where((User.username==User.encrypt_value(user.username)) & (User.is_active)):
         raise HTTPException(status_code=401, detail='That username already exists, try again')
 
     user = User.create(

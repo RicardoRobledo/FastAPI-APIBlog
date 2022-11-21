@@ -18,6 +18,7 @@ class PublicationGetResponse(ResponseModel):
     
     title: str
     content: str
+    id: int
 
 
 class PublicationSpecificGetResponse(ResponseModel):

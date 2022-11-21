@@ -31,7 +31,7 @@ class Publication(Model):
     content = CharField(max_length=200)
     creation_date = DateTimeField(default=datetime.now)
     is_active = BooleanField(default=True)
-    user_id = ForeignKeyField(model=User, backref='user')
+    user_id = ForeignKeyField(model=User, backref='publications')
     
     class Meta:
         database = database
