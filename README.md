@@ -1,4 +1,5 @@
-# MakingaWebServiceWithFastAPI
+# FastAPI-APIBlog
+
 This is an easy API made up with FastAPI for a blog 
 
 <p align="center">
